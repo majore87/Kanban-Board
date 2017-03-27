@@ -2,12 +2,11 @@
 $(document).ready(function() {
 	var charts = '0123456789abcdefghiklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXTZ';
 	var str = '';
-	var i = 0;
 
 	// Generate random id
 	function randomString() {
 		for (i = 0; i < 10; i++) {
-			str += charts[Math.floor(Math.random * charts.length)]; //
+			str += charts[Math.floor(Math.random() * charts.length)]; //Function draws 10 elements from string and composes them into one string
 		}
 		return str;
 	}
@@ -17,8 +16,8 @@ $(document).ready(function() {
 		// jQuery UI .sortable(); can give us drag 'n' drop function
 	    $('.column-card-list').sortable({
 	    	// Configuration object from documentation.
-		      connectWith: '.column-card-list', // Select he list in which the sort will work
-		      placeholder: 'card-placeholder' // Holds the class name that apears when it hovers over an empty field to which we drop a item.
+		    connectWith: '.column-card-list', // Select he list in which the sort will work
+		    placeholder: 'card-placeholder' // Holds the class name that apears when it hovers over an empty field to which we drop a item.
 	    }).disableSelection(); // Turn off select text when drag'n'drop
  	}
 
@@ -55,9 +54,9 @@ $(document).ready(function() {
 			// List element - card
 			var $card = $('<li>').addClass('card');
 			// Card description in paragraph
-			var $cardDescription = $('p').addClass('<card-description>').text(self.description);
+			var $cardDescription = $('<p>').addClass('<card-description>').text(self.description);
 			// Button for delete card
-			var $cardDelete = $('<button').addClass('btn-delete').text('x');
+			var $cardDelete = $('<button>').addClass('btn-delete').text('x');
 
 			//2. Hooking up Events
 			// Delete card
@@ -73,33 +72,33 @@ $(document).ready(function() {
 
 	// Card prototype with delete function
 	Card.prototype = {
-			removeCard: function() {
-				this.$element.remove();
-			}
-		};
+		removeCard: function() {
+			this.$element.remove();
+		}
+	};
 
 	// Contructor for new column instance
-	function Column(name){
+	function Column(name) {
 		var self = this;   // for function inside function
+		this.id = randomString();  // to assign id to random string
 		this.name = name;
-		var id = randomString();  // to assign id to random string
 		this.$element = createColumn(); // With new instance there will be created new jquery object
 
 		function createColumn() {
 
 			// Creating Column components
-			var $column = $('div').addClass('column'); // Add new class to div
-			var $columnTitle = $('h2').addClass('column-title').text(self.name); // Add name parameter by text method into h2 column title
-			var $columnCardList = $('ul').addClass('column-card-list'); // To create lists of elements
-			var $columnAddCard = $('button').addClass('add-card').text('add card');
-			var $columnDelete = $('button').addClass('btn-delete').text('X');
+			var $column = $('<div>').addClass('column'); // Add new class to div
+			var $columnTitle = $('<h2>').addClass('column-title').text(self.name); // Add name parameter by text method into h2 column title
+			var $columnCardList = $('<ul>').addClass('column-list'); // To create lists of elements
+			var $columnDelete = $('<button>').addClass('btn-delete').text('X');
+			var $columnAddCard = $('<button>').addClass('add-card').text('Add card');
 
 			// Delete column after pressing the button
-			$columnDelete.click(function(){
+			$columnDelete.click(function() {
 				self.removeColumn();
 			});
 			// Add card after pressing the button
-			$columnAddCard.click(function(){
+			$columnAddCard.click(function(event){
 				self.addCard(new Card(prompt('Enter card title'))); //Prompt is for getting the title from user
 			});
 
@@ -113,6 +112,7 @@ $(document).ready(function() {
 			return $column;  // without this we don't have a reference to new instance, where we cal function
 		}
 	}
+
 	// Add two methods to Column prototype
 	Column.prototype = {
 		// Methods takes card as the parameter which we want to add into column
